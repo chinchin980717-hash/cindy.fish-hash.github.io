@@ -93,7 +93,7 @@ function choose(index) {
   state.boundary = clamp(state.boundary + action.boundary);
   state.score += action.points + (answer.fishAction === "bite" ? state.chain * 12 : 0);
   state.chain = answer.fishAction === "bite" ? state.chain + 1 : 0;
-  $("feedback").innerHTML = `<strong>魚的動作：${action.display}</strong>　·　心動 ${action.heart >= 0 ? "+" : ""}${action.heart}　警覺 ${action.radar >= 0 ? "+" : ""}${action.radar}　界線 ${action.boundary >= 0 ? "+" : ""}${action.boundary}<br><span>你的回覆：「${escapeHtml(answer.text)}」</span>`;
+  $("feedback").innerHTML = `<strong>魚的動作：${action.display}</strong><br><span>你的回覆：「${escapeHtml(answer.text)}」</span><br><small>量表變化先保密，結算時再揭曉。</small>`;
   $("feedback").classList.add(action.className);
   $("next-button").classList.remove("hidden");
   updateStatus();
@@ -117,8 +117,12 @@ function finishGame() {
   else if (state.chain >= 4) { title = "連續咬餌達人 🎣"; summary = "你很願意靠近，也可以再看看對方的行動是否和訊息一致。"; }
   else if (state.heart >= 58) { title = "差點暈船 🌊"; summary = "心動和警覺都可以同時存在，給自己一點時間。"; }
   $("result-title").textContent = title; $("result-summary").textContent = summary;
+  [["heart", state.heart], ["radar", state.radar], ["boundary", state.boundary]].forEach(([key, value]) => {
+    $(`result-${key}-value`).textContent = `${value} / 100`;
+    updateBar(`result-${key}-bar`, value);
+  });
   const counts = state.actionCounts;
-  $("result-stats").innerHTML = `心動值 ${state.heart} / 100　·　警覺值 ${state.radar} / 100　·　界線值 ${state.boundary} / 100<br>本局分數 ${state.score}　·　最高分 ${state.bestScore}<br><br><strong>魚的動作統計：</strong>咬餌 ${counts.bite} 次　·　觀察 ${counts.observe} 次　·　脫鉤 ${counts.unhook} 次<br><br><strong>游法報告：</strong>${report()}`;
+  $("result-stats").innerHTML = `本局分數 ${state.score}　·　最高分 ${state.bestScore}<br><br><strong>魚的動作統計：</strong>咬餌 ${counts.bite} 次　·　觀察 ${counts.observe} 次　·　脫鉤 ${counts.unhook} 次<br><br><strong>游法報告：</strong>${report()}`;
 }
 
 $("start-button").addEventListener("click", startGame);

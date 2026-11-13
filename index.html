@@ -31,7 +31,7 @@
           <p id="title-hint" class="hint">按開始，看看你今天會不會又被一句「在嗎」釣走。</p>
         </div>
       </div>
-      <div class="hero-fish" aria-hidden="true"><span class="fish-eye"></span><span class="fish-tail"></span></div>
+      <div class="hero-fish" aria-hidden="true"><span class="fish-eye"></span><span class="fish-cheek"></span><span class="fish-smile"></span><span class="fish-tail"></span></div>
     </section>
 
     <section id="play-screen" class="screen play-screen hidden">
@@ -56,14 +56,14 @@
         </article>
 
         <aside class="status-card">
-          <h3>魚況儀表板</h3>
-          <p class="muted">你的心，還在自己的身上嗎？</p>
-          <div id="game-fish" class="game-fish" role="img" aria-label="正在游動的小魚"><span class="game-fish-eye"></span><span class="game-fish-tail"></span><span class="game-fish-fin"></span></div>
-          <div class="stat"><div><span>心動值</span><strong id="heart-value">42 / 100</strong></div><div class="bar"><i id="heart-bar" class="bar-heart"></i></div></div>
-          <div class="stat"><div><span>警覺值</span><strong id="radar-value">28 / 100</strong></div><div class="bar"><i id="radar-bar" class="bar-radar"></i></div></div>
-          <div class="stat"><div><span>界線值</span><strong id="boundary-value">50 / 100</strong></div><div class="bar"><i id="boundary-bar" class="bar-boundary"></i></div></div>
-          <div class="mini-stats"><span>魚餌連擊 <b id="chain-value">0</b></span><span>本局分數 <b id="score-value">0</b></span></div>
-          <p class="tip">小提醒：沒有標準答案，只有更適合你的游法。</p>
+          <h3>魚況暫不揭曉</h3>
+          <p class="muted">心動、警覺與界線值會留到最後結算。</p>
+          <div id="game-fish" class="game-fish" role="img" aria-label="正在游動的小魚"><span class="game-fish-belly"></span><span class="game-fish-eye"></span><span class="game-fish-cheek"></span><span class="game-fish-mouth"></span><span class="game-fish-tail"></span><span class="game-fish-fin"></span><span class="game-fish-bubble"></span></div>
+          <div class="stat hidden"><div><span>心動值</span><strong id="heart-value">42 / 100</strong></div><div class="bar"><i id="heart-bar" class="bar-heart"></i></div></div>
+          <div class="stat hidden"><div><span>警覺值</span><strong id="radar-value">28 / 100</strong></div><div class="bar"><i id="radar-bar" class="bar-radar"></i></div></div>
+          <div class="stat hidden"><div><span>界線值</span><strong id="boundary-value">50 / 100</strong></div><div class="bar"><i id="boundary-bar" class="bar-boundary"></i></div></div>
+          <div class="mini-stats hidden"><span>魚餌連擊 <b id="chain-value">0</b></span><span>本局分數 <b id="score-value">0</b></span></div>
+          <p class="tip">先選你真正想傳出的回覆；所有量表與分數會在本局結束後揭曉。</p>
         </aside>
       </div>
     </section>
@@ -73,6 +73,11 @@
         <p class="eyebrow">本局魚生結算</p>
         <h2 id="result-title">自由海域型</h2>
         <p id="result-summary" class="result-summary"></p>
+        <div class="result-meters" aria-label="本局量表結算">
+          <div class="result-meter"><div><span>心動值</span><strong id="result-heart-value">42 / 100</strong></div><div class="bar"><i id="result-heart-bar" class="bar-heart"></i></div></div>
+          <div class="result-meter"><div><span>警覺值</span><strong id="result-radar-value">28 / 100</strong></div><div class="bar"><i id="result-radar-bar" class="bar-radar"></i></div></div>
+          <div class="result-meter"><div><span>界線值</span><strong id="result-boundary-value">50 / 100</strong></div><div class="bar"><i id="result-boundary-bar" class="bar-boundary"></i></div></div>
+        </div>
         <div id="result-stats" class="result-stats"></div>
         <button id="replay-button" class="primary-button">再釣一次　↻</button>
         <button id="title-button" class="ghost-button">回到海面標題</button>

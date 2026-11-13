@@ -74,6 +74,12 @@ var result_kicker: Label
 var result_title: Label
 var result_summary: Label
 var result_stats: Label
+var result_heart_value: Label
+var result_radar_value: Label
+var result_boundary_value: Label
+var result_heart_bar: ProgressBar
+var result_radar_bar: ProgressBar
+var result_boundary_bar: ProgressBar
 var replay_button: Button
 var title_button: Button
 
@@ -170,10 +176,30 @@ func _draw() -> void:
 		_draw_fish(Vector2(w * 0.77, h * 0.60 + sin(fish_anim_time * 1.8) * 8.0), 1.25, ending_key)
 
 func _draw_fish(center: Vector2, scale_factor: float, mood: String) -> void:
+	var wag := sin(fish_anim_time * 8.0) * 13.0
+	var tail := PackedVector2Array([
+		center + Vector2(66.0, 0.0) * scale_factor,
+		center + Vector2(137.0, -54.0 + wag) * scale_factor,
+		center + Vector2(124.0, 5.0 + wag) * scale_factor,
+		center + Vector2(139.0, 57.0 + wag) * scale_factor
+	])
+	draw_colored_polygon(tail, Color("278da5"))
+	draw_polyline(PackedVector2Array([tail[0], tail[1], tail[2], tail[3]]), Color("9cf0e7"), 3.0 * scale_factor)
+	# 背鰭和腹鰭先畫，魚身會自然覆蓋鰭根。
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-12.0, -46.0) * scale_factor,
+		center + Vector2(18.0, -79.0) * scale_factor,
+		center + Vector2(48.0, -43.0) * scale_factor
+	]), Color("39aebe"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-10.0, 34.0) * scale_factor,
+		center + Vector2(23.0, 72.0) * scale_factor,
+		center + Vector2(49.0, 31.0) * scale_factor
+	]), Color("278da8"))
 	var body := PackedVector2Array()
-	for i in range(32):
-		var a := TAU * float(i) / 32.0
-		body.append(center + Vector2(cos(a) * 92.0 * scale_factor, sin(a) * 56.0 * scale_factor))
+	for i in range(40):
+		var a := TAU * float(i) / 40.0
+		body.append(center + Vector2(cos(a) * 84.0 * scale_factor, sin(a) * 60.0 * scale_factor))
 	var body_color := Color("45c9d1")
 	if mood == "dizzy": body_color = Color("6fc8ed")
 	if mood == "free": body_color = Color("69e7be")
@@ -181,40 +207,35 @@ func _draw_fish(center: Vector2, scale_factor: float, mood: String) -> void:
 	draw_colored_polygon(body, body_color)
 	var outline := PackedVector2Array(body)
 	outline.append(body[0])
-	draw_polyline(outline, Color("c4fbf5"), 4.0)
-	var tail := PackedVector2Array([
-		center + Vector2(70.0, 0.0) * scale_factor,
-		center + Vector2(138.0, -58.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor,
-		center + Vector2(125.0, 8.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor,
-		center + Vector2(144.0, 61.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor
-	])
-	draw_colored_polygon(tail, Color("2b9fb6"))
-	draw_polyline(PackedVector2Array([tail[0], tail[1], tail[2], tail[3]]), Color("9cf0e7"), 3.0)
-	# 鰭與肚皮。
-	draw_colored_polygon(PackedVector2Array([
-		center + Vector2(-10.0, 38.0) * scale_factor,
-		center + Vector2(27.0, 78.0) * scale_factor,
-		center + Vector2(50.0, 34.0) * scale_factor
-	]), Color("278da8"))
-	_draw_ellipse(center + Vector2(-15.0, 18.0) * scale_factor, Vector2(55.0, 25.0) * scale_factor, Color(0.78, 0.97, 0.90, 0.32))
-	# 眼睛與表情。
-	var eye_y := -15.0
+	draw_polyline(outline, Color("d7fff7"), 4.0 * scale_factor)
+	_draw_ellipse(center + Vector2(-13.0, 18.0) * scale_factor, Vector2(48.0, 27.0) * scale_factor, Color(1.0, 0.98, 0.89, 0.40))
+	# 腮紅、魚鰓與泡泡，增加角色感但不遮住表情。
+	draw_circle(center + Vector2(-55.0, 10.0) * scale_factor, 7.0 * scale_factor, Color(1.0, 0.48, 0.59, 0.76))
+	draw_circle(center + Vector2(-46.0, 12.0) * scale_factor, 3.0 * scale_factor, Color(1.0, 0.70, 0.71, 0.86))
+	draw_arc(center + Vector2(10.0, 2.0) * scale_factor, 14.0 * scale_factor, -0.8, 0.8, 12, Color(0.07, 0.40, 0.54, 0.52), 2.0 * scale_factor)
+	draw_arc(center + Vector2(20.0, 3.0) * scale_factor, 14.0 * scale_factor, -0.8, 0.8, 12, Color(0.07, 0.40, 0.54, 0.40), 2.0 * scale_factor)
+	var bubble_offset := sin(fish_anim_time * 2.0) * 5.0
+	draw_circle(center + Vector2(-92.0, -58.0 + bubble_offset) * scale_factor, 5.0 * scale_factor, Color(0.65, 0.96, 0.96, 0.72))
+	draw_arc(center + Vector2(-110.0, -83.0 - bubble_offset) * scale_factor, 4.0 * scale_factor, 0.0, TAU, 18, Color(0.65, 0.96, 0.96, 0.64), 2.0 * scale_factor)
+	# 眼睛保留作答反應，並加入高光。
+	var eye_y := -16.0
 	var eye_x := -38.0
 	if mood == "dizzy":
-		draw_line(center + Vector2(eye_x - 7.0, eye_y - 7.0) * scale_factor, center + Vector2(eye_x + 7.0, eye_y + 7.0) * scale_factor, CREAM, 4.0)
-		draw_line(center + Vector2(eye_x + 7.0, eye_y - 7.0) * scale_factor, center + Vector2(eye_x - 7.0, eye_y + 7.0) * scale_factor, CREAM, 4.0)
+		draw_line(center + Vector2(eye_x - 7.0, eye_y - 7.0) * scale_factor, center + Vector2(eye_x + 7.0, eye_y + 7.0) * scale_factor, CREAM, 4.0 * scale_factor)
+		draw_line(center + Vector2(eye_x + 7.0, eye_y - 7.0) * scale_factor, center + Vector2(eye_x - 7.0, eye_y + 7.0) * scale_factor, CREAM, 4.0 * scale_factor)
 	else:
-		draw_circle(center + Vector2(eye_x, eye_y) * scale_factor, 12.0 * scale_factor, CREAM)
-		draw_circle(center + Vector2(eye_x + 3.0, eye_y + 1.0) * scale_factor, 5.5 * scale_factor, Color("12334f"))
+		draw_circle(center + Vector2(eye_x, eye_y) * scale_factor, 13.0 * scale_factor, CREAM)
+		draw_circle(center + Vector2(eye_x + 3.0, eye_y + 1.0) * scale_factor, 6.0 * scale_factor, Color("12334f"))
+		draw_circle(center + Vector2(eye_x + 1.0, eye_y - 3.0) * scale_factor, 2.6 * scale_factor, Color("ffffff"))
 		if mood == "alert":
-			draw_line(center + Vector2(eye_x - 14.0, eye_y - 16.0) * scale_factor, center + Vector2(eye_x + 8.0, eye_y - 23.0) * scale_factor, CREAM, 4.0)
+			draw_line(center + Vector2(eye_x - 14.0, eye_y - 16.0) * scale_factor, center + Vector2(eye_x + 8.0, eye_y - 23.0) * scale_factor, CREAM, 4.0 * scale_factor)
 		else:
-			draw_line(center + Vector2(eye_x - 10.0, eye_y - 22.0) * scale_factor, center + Vector2(eye_x + 8.0, eye_y - 19.0) * scale_factor, CREAM, 4.0)
+			draw_line(center + Vector2(eye_x - 10.0, eye_y - 22.0) * scale_factor, center + Vector2(eye_x + 8.0, eye_y - 19.0) * scale_factor, CREAM, 4.0 * scale_factor)
 	var mouth_center := center + Vector2(-11.0, 15.0) * scale_factor
 	if mood == "happy" or mood == "free" or mood == "king":
-		draw_arc(mouth_center, 19.0 * scale_factor, 0.12, 2.55, 18, Color("163653"), 4.0)
+		draw_arc(mouth_center, 17.0 * scale_factor, 0.12, 2.55, 18, Color("163653"), 3.5 * scale_factor)
 	else:
-		draw_arc(mouth_center + Vector2(0, 9) * scale_factor, 15.0 * scale_factor, 3.65, 6.0, 18, Color("163653"), 4.0)
+		draw_arc(mouth_center + Vector2(0, 8) * scale_factor, 14.0 * scale_factor, 3.65, 6.0, 18, Color("163653"), 3.5 * scale_factor)
 	if mood == "king":
 		var crown := PackedVector2Array([
 			center + Vector2(-66, -73) * scale_factor,
@@ -224,11 +245,10 @@ func _draw_fish(center: Vector2, scale_factor: float, mood: String) -> void:
 			center + Vector2(35, -73) * scale_factor
 		])
 		draw_colored_polygon(crown, YELLOW)
-		draw_polyline(crown, Color("fff1a6"), 4.0)
+		draw_polyline(crown, Color("fff1a6"), 4.0 * scale_factor)
 	if mood == "dizzy":
-		draw_arc(center + Vector2(25, -73) * scale_factor, 19.0 * scale_factor, 0.0, TAU, 20, PURPLE, 3.0)
-		draw_line(center + Vector2(17, -87) * scale_factor, center + Vector2(33, -73) * scale_factor, PURPLE, 3.0)
-
+		draw_arc(center + Vector2(25, -73) * scale_factor, 19.0 * scale_factor, 0.0, TAU, 20, PURPLE, 3.0 * scale_factor)
+		draw_line(center + Vector2(17, -87) * scale_factor, center + Vector2(33, -73) * scale_factor, PURPLE, 3.0 * scale_factor)
 func _draw_ellipse(center: Vector2, radii: Vector2, color: Color) -> void:
 	var points := PackedVector2Array()
 	for i in range(24):
@@ -396,37 +416,47 @@ func _build_play() -> void:
 	var status_content := VBoxContainer.new()
 	status_content.add_theme_constant_override("separation", 11)
 	status_panel.add_child(status_content)
-	var status_title := _make_label("魚況儀表板", 20, CREAM)
+	var status_title := _make_label("魚況暫不揭曉", 20, CREAM)
 	status_content.add_child(status_title)
-	var status_sub := _make_label("你的心，還在自己的身上嗎？", 13, MUTED)
+	var status_sub := _make_label("心動、警覺與界線值會留到最後結算。", 13, MUTED)
 	status_content.add_child(status_sub)
 	status_content.add_child(_spacer(8))
 	var heart_row := _stat_row("心動值", "每咬一口都會變甜", CORAL)
+	heart_row[0].visible = false
 	status_content.add_child(heart_row[0])
 	heart_value = heart_row[1]
 	heart_bar = heart_row[2]
 	status_content.add_child(heart_bar)
+	heart_bar.visible = false
 	var radar_row := _stat_row("警覺值", "雷達越高，越不容易暈", CYAN)
+	radar_row[0].visible = false
 	status_content.add_child(radar_row[0])
 	radar_value = radar_row[1]
 	radar_bar = radar_row[2]
 	status_content.add_child(radar_bar)
+	radar_bar.visible = false
 	var boundary_row := _stat_row("界線值", "保留時間，也保留自己", GREEN)
+	boundary_row[0].visible = false
 	status_content.add_child(boundary_row[0])
 	boundary_value = boundary_row[1]
 	boundary_bar = boundary_row[2]
 	status_content.add_child(boundary_bar)
+	boundary_bar.visible = false
 	status_content.add_child(_spacer(8))
 	var chain_row := _stat_row("魚餌連擊", "連續判斷漂亮就會增加", YELLOW)
+	chain_row[0].visible = false
 	status_content.add_child(chain_row[0])
 	status_content.add_child(chain_row[2])
+	chain_row[2].visible = false
 	chain_value = chain_row[1]
 	var score_row := _stat_row("本局分數", "你的感情判斷力", GREEN)
+	score_row[0].visible = false
 	status_content.add_child(score_row[0])
 	status_content.add_child(score_row[2])
+	score_row[2].visible = false
 	score_value = score_row[1]
 	status_content.add_child(_spacer(12))
-	play_tip = _make_label("小提醒：沒有標準答案，只有更適合你的游法。", 14, PURPLE)
+	play_tip = _make_label("先選你真正想傳出的回覆；所有量表與分數會在本局結束後揭曉。", 14, PURPLE)
 	play_tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status_content.add_child(play_tip)
 
@@ -454,11 +484,23 @@ func _build_result() -> void:
 	result_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	result_summary.custom_minimum_size.y = 76
 	content.add_child(result_summary)
+	var result_meters := VBoxContainer.new()
+	result_meters.add_theme_constant_override("separation", 7)
+	content.add_child(result_meters)
+	var heart_meter := _result_meter(result_meters, "心動值", CORAL)
+	result_heart_value = heart_meter[0]
+	result_heart_bar = heart_meter[1]
+	var radar_meter := _result_meter(result_meters, "警覺值", CYAN)
+	result_radar_value = radar_meter[0]
+	result_radar_bar = radar_meter[1]
+	var boundary_meter := _result_meter(result_meters, "界線值", GREEN)
+	result_boundary_value = boundary_meter[0]
+	result_boundary_bar = boundary_meter[1]
 	var divider := ColorRect.new()
 	divider.color = Color(0.44, 0.86, 0.87, 0.24)
 	divider.custom_minimum_size.y = 1
 	content.add_child(divider)
-	result_stats = _make_label("", 16, CREAM)
+	result_stats = _make_label("", 15, CREAM)
 	result_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	result_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(result_stats)
@@ -497,7 +539,7 @@ func _layout_ui() -> void:
 		status_panel.size = Vector2(body_w - left_w, body_h - 24.0)
 	if result_panel != null:
 		var result_w := minf(620.0, w - 80.0)
-		var result_h := minf(560.0, h - 60.0)
+		var result_h := minf(650.0, h - 40.0)
 		result_panel.position = Vector2((w - result_w) * 0.5, (h - result_h) * 0.5)
 		result_panel.size = Vector2(result_w, result_h)
 
@@ -516,7 +558,7 @@ func _show_title() -> void:
 func _toggle_how() -> void:
 	showing_how = not showing_how
 	if showing_how:
-		title_hint.text = "每回合閱讀情境，先選你會送出的文字回覆。選完才會揭曉魚的動作與數值變化；咬餌、觀察、脫鉤都是結果，不是選項。"
+		title_hint.text = "每回合閱讀情境，先選你會送出的文字回覆。選完揭曉魚的動作；心動、警覺與界線量表只在結算時出現。咬餌、觀察、脫鉤都是結果，不是選項。"
 		how_button.text = "收起說明"
 	else:
 		title_hint.text = "按開始，看看你今天會不會又被一句「在嗎」釣走。"
@@ -591,7 +633,7 @@ func _choose(choice: int) -> void:
 		boundary -= 7
 		score += 70 + chain * 12
 		chain += 1
-		feedback_label.text = "魚的動作：咬餌。心動 +13，警覺 -8，界線 -7。\n%s" % _choice_comment(fish_action)
+		feedback_label.text = "魚的動作：咬餌。量表已記錄，結算時揭曉。\n%s" % _choice_comment(fish_action)
 		feedback_label.add_theme_color_override("font_color", CORAL)
 	elif fish_action == "observe":
 		heart += 4
@@ -599,7 +641,7 @@ func _choose(choice: int) -> void:
 		boundary += 8
 		score += 105
 		chain = 0
-		feedback_label.text = "魚的動作：先觀察。心動 +4，警覺 +8，界線 +8。\n%s" % _choice_comment(fish_action)
+		feedback_label.text = "魚的動作：先觀察。量表已記錄，結算時揭曉。\n%s" % _choice_comment(fish_action)
 		feedback_label.add_theme_color_override("font_color", YELLOW)
 	else:
 		heart -= 4
@@ -607,7 +649,7 @@ func _choose(choice: int) -> void:
 		boundary += 12
 		score += 90
 		chain = 0
-		feedback_label.text = "魚的動作：脫鉤（甩尾離場）。心動 -4，警覺 +14，界線 +12。\n%s" % _choice_comment(fish_action)
+		feedback_label.text = "魚的動作：脫鉤（甩尾離場）。量表已記錄，結算時揭曉。\n%s" % _choice_comment(fish_action)
 		feedback_label.add_theme_color_override("font_color", GREEN)
 	heart = clampi(heart, 0, 100)
 	radar = clampi(radar, 0, 100)
@@ -655,7 +697,13 @@ func _finish_game() -> void:
 		ending_key = "free"
 		result_title.text = "自由潛水員 🌊"
 		result_summary.text = "你沒有急著成為誰的特別，也沒有把孤單誤認成愛。\n海很大，慢慢游就好。"
-	result_stats.text = "心動值  %d / 100    ·    警覺值  %d / 100    ·    界線值  %d / 100\n本局分數  %d    ·    魚餌連擊  %d    ·    最高分  %d\n\n游法報告：%s" % [heart, radar, boundary, score, chain, best_score, _boundary_report()]
+	result_heart_value.text = "%d / 100" % heart
+	result_radar_value.text = "%d / 100" % radar
+	result_boundary_value.text = "%d / 100" % boundary
+	result_heart_bar.value = heart
+	result_radar_bar.value = radar
+	result_boundary_bar.value = boundary
+	result_stats.text = "本局分數  %d    ·    魚餌連擊  %d    ·    最高分  %d\n魚的動作：咬餌 %d 次    ·    觀察 %d 次    ·    脫鉤 %d 次\n\n游法報告：%s" % [score, chain, best_score, action_counts["bite"], action_counts["observe"], action_counts["unhook"], _boundary_report()]
 	queue_redraw()
 
 func _update_status() -> void:
@@ -697,6 +745,21 @@ func _stat_row(caption: String, description: String, accent: Color) -> Array:
 	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(value)
 	return [row, value, _make_progress(accent), description]
+
+func _result_meter(parent: VBoxContainer, caption: String, accent: Color) -> Array:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var title := _make_label(caption, 15, accent)
+	title.custom_minimum_size.x = 94
+	row.add_child(title)
+	var value := _make_label("0 / 100", 15, CREAM)
+	value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	row.add_child(value)
+	parent.add_child(row)
+	var bar := _make_progress(accent)
+	parent.add_child(bar)
+	return [value, bar]
 
 func _make_progress(accent: Color) -> ProgressBar:
 	var bar := ProgressBar.new()
