@@ -26,6 +26,7 @@ var selected_round_count := 8
 var round_count := 8
 var action_counts := {"bite": 0, "observe": 0, "unhook": 0}
 var current_event: Dictionary = {}
+var current_answers: Array = []
 var selected_choice := -1
 var answer_locked := false
 var ending_key := ""
@@ -544,10 +545,11 @@ func _next_event() -> void:
 	event_sender.text = "第 %s 題" % str(current_event["id"])
 	event_message.text = current_event["scenario"]
 	event_detail.text = "讀完情境，選一段你會送出的回覆；魚的反應稍後揭曉。"
-	var answers: Array = current_event["answers"]
-	bite_button.text = "1. " + str(answers[0]["text"])
-	observe_button.text = "2. " + str(answers[1]["text"])
-	leave_button.text = "3. " + str(answers[2]["text"])
+	current_answers = current_event["answers"].duplicate()
+	current_answers.shuffle()
+	bite_button.text = "1. " + str(current_answers[0]["text"])
+	observe_button.text = "2. " + str(current_answers[1]["text"])
+	leave_button.text = "3. " + str(current_answers[2]["text"])
 	feedback_label.text = ""
 	next_button.visible = false
 	bite_button.disabled = false
@@ -565,7 +567,7 @@ func _choose(choice: int) -> void:
 	bite_button.disabled = true
 	observe_button.disabled = true
 	leave_button.disabled = true
-	var answer: Dictionary = current_event["answers"][choice]
+	var answer: Dictionary = current_answers[choice]
 	var fish_action: String = answer["fishAction"]
 	action_counts[fish_action] += 1
 	if fish_action == "bite":

@@ -5,7 +5,7 @@ const ACTIONS = {
 };
 
 const state = {
-  screen: "title", roundIndex: 0, roundCount: 8, deck: [], question: null,
+  screen: "title", roundIndex: 0, roundCount: 8, deck: [], question: null, answers: [],
   locked: false, heart: 42, radar: 28, boundary: 50, chain: 0, score: 0,
   actionCounts: { bite: 0, observe: 0, unhook: 0 },
   bestScore: Number(localStorage.getItem("fish-best-score") || 0)
@@ -56,6 +56,7 @@ function nextQuestion() {
   if (state.roundIndex >= state.roundCount) return finishGame();
   state.question = state.deck[state.roundIndex]; state.locked = false;
   const question = state.question;
+  state.answers = shuffle(question.answers);
   $("round-label").textContent = `第 ${state.roundIndex + 1} / ${state.roundCount} 題`;
   $("round-progress").style.width = `${state.roundIndex / state.roundCount * 100}%`;
   $("event-badge").textContent = `題庫第 ${question.id} 題`;
@@ -66,13 +67,13 @@ function nextQuestion() {
   $("feedback").textContent = "";
   $("feedback").className = "feedback";
   $("next-button").classList.add("hidden");
-  const choices = $("answer-choices"); choices.replaceChildren(...question.answers.map(makeAnswerButton));
+  const choices = $("answer-choices"); choices.replaceChildren(...state.answers.map(makeAnswerButton));
   updateStatus();
 }
 function choose(index) {
   if (state.locked) return;
   state.locked = true;
-  const answer = state.question.answers[index];
+  const answer = state.answers[index];
   const action = ACTIONS[answer.fishAction];
   document.querySelectorAll(".choice").forEach((button, i) => {
     button.disabled = true;
