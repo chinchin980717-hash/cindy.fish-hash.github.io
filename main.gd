@@ -360,21 +360,24 @@ func _build_play() -> void:
 	bite_button = _make_button("", CYAN, 154)
 	bite_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	bite_button.custom_minimum_size.y = 64
-	bite_button.add_theme_font_size_override("font_size", 14)
+	bite_button.add_theme_font_size_override("font_size", 16)
+	bite_button.add_theme_color_override("font_color", Color("fff8e8"))
 	bite_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bite_button.pressed.connect(_choose.bind(0))
 	action_row.add_child(bite_button)
 	observe_button = _make_button("", CYAN, 154)
 	observe_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	observe_button.custom_minimum_size.y = 64
-	observe_button.add_theme_font_size_override("font_size", 14)
+	observe_button.add_theme_font_size_override("font_size", 16)
+	observe_button.add_theme_color_override("font_color", Color("fff8e8"))
 	observe_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	observe_button.pressed.connect(_choose.bind(1))
 	action_row.add_child(observe_button)
 	leave_button = _make_button("", CYAN, 154)
 	leave_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	leave_button.custom_minimum_size.y = 64
-	leave_button.add_theme_font_size_override("font_size", 14)
+	leave_button.add_theme_font_size_override("font_size", 16)
+	leave_button.add_theme_color_override("font_color", Color("fff8e8"))
 	leave_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	leave_button.pressed.connect(_choose.bind(2))
 	action_row.add_child(leave_button)

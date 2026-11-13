@@ -55,16 +55,17 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 .detail { line-height: 1.6; }
 .question { color: var(--yellow); font-size: 14px; margin-top: 24px; }
 .action-row { display: grid; grid-template-columns: 1fr; gap: 10px; }
-.choice { position: relative; min-height: 62px; padding: 15px 18px 15px 92px; color: var(--cream); font-weight: 650; font-size: 15px; line-height: 1.65; text-align: left; white-space: normal; overflow-wrap: anywhere; }
-.choice::before { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .04em; }
+.choice { position: relative; min-height: 62px; padding: 15px 18px 15px 92px; color: #fff8e8; background: rgba(3, 20, 38, .98); border: 1px solid rgba(109, 229, 232, .78); font-weight: 750; font-size: 16px; line-height: 1.7; text-align: left; white-space: normal; overflow-wrap: anywhere; text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+.choice::before { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #8feef0; font-size: 12px; font-weight: 850; letter-spacing: .04em; }
 .choice:nth-child(1)::before { content: "回覆 1"; }
 .choice:nth-child(2)::before { content: "回覆 2"; }
 .choice:nth-child(3)::before { content: "回覆 3"; }
 .bite { background: rgba(255,128,104,.28); border-color: var(--coral); }
 .observe { background: rgba(255,211,110,.18); border-color: var(--yellow); }
 .leave { background: rgba(135,230,173,.18); border-color: var(--green); }
-.choice:disabled { cursor: default; opacity: .72; transform: none; }
+.choice:disabled { cursor: default; opacity: .92; transform: none; }
 .choice.selected { opacity: 1; box-shadow: 0 0 0 2px var(--cyan), 0 8px 24px rgba(0,0,0,.2); }
+.choice:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .feedback { min-height: 48px; color: var(--green); line-height: 1.7; white-space: pre-line; margin: 17px 0 0; }
 .feedback span { color: var(--muted); }
 .feedback.bite strong { color: var(--coral); }
