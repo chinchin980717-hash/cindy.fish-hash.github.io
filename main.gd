@@ -27,6 +27,9 @@ var round_count := 8
 var action_counts := {"bite": 0, "observe": 0, "unhook": 0}
 var current_event: Dictionary = {}
 var current_answers: Array = []
+var fish_anim_time := 0.0
+var fish_reaction_time := 0.0
+var fish_reaction := ""
 var selected_choice := -1
 var answer_locked := false
 var ending_key := ""
@@ -102,7 +105,9 @@ func _ready() -> void:
 	_show_title()
 	queue_redraw()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	fish_anim_time += delta
+	fish_reaction_time = maxf(0.0, fish_reaction_time - delta)
 	queue_redraw()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -151,13 +156,18 @@ func _draw() -> void:
 		draw_polyline(points, Color(0.38, 0.83, 0.88, 0.08 - float(wave) * 0.012), 2.0)
 	if screen == "title":
 		_draw_hook(Vector2(w * 0.84, h * 0.10), 0.9)
-		_draw_fish(Vector2(w * 0.74, h * 0.52), 1.48, "happy")
+		_draw_fish(Vector2(w * 0.74, h * 0.52 + sin(fish_anim_time * 2.0) * 9.0), 1.48, "happy")
 	elif screen == "play":
 		_draw_hook(Vector2(w * 0.88, h * 0.23), 0.56)
-		_draw_fish(Vector2(w * 0.86, h * 0.75), 0.78, _play_mood())
+		var reaction_offset := 0.0
+		if fish_reaction_time > 0.0:
+			var strength := sin((fish_reaction_time / 0.55) * PI)
+			if fish_reaction == "bite": reaction_offset = -18.0 * strength
+			elif fish_reaction == "unhook": reaction_offset = 24.0 * strength
+		_draw_fish(Vector2(w * 0.86, h * 0.75 + sin(fish_anim_time * 2.5) * 6.0 + reaction_offset), 0.78, _play_mood())
 	elif screen == "result":
 		_draw_hook(Vector2(w * 0.82, h * 0.10), 0.78)
-		_draw_fish(Vector2(w * 0.77, h * 0.60), 1.25, ending_key)
+		_draw_fish(Vector2(w * 0.77, h * 0.60 + sin(fish_anim_time * 1.8) * 8.0), 1.25, ending_key)
 
 func _draw_fish(center: Vector2, scale_factor: float, mood: String) -> void:
 	var body := PackedVector2Array()
@@ -174,9 +184,9 @@ func _draw_fish(center: Vector2, scale_factor: float, mood: String) -> void:
 	draw_polyline(outline, Color("c4fbf5"), 4.0)
 	var tail := PackedVector2Array([
 		center + Vector2(70.0, 0.0) * scale_factor,
-		center + Vector2(138.0, -58.0) * scale_factor,
-		center + Vector2(125.0, 8.0) * scale_factor,
-		center + Vector2(144.0, 61.0) * scale_factor
+		center + Vector2(138.0, -58.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor,
+		center + Vector2(125.0, 8.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor,
+		center + Vector2(144.0, 61.0 + sin(fish_anim_time * 8.0) * 15.0) * scale_factor
 	])
 	draw_colored_polygon(tail, Color("2b9fb6"))
 	draw_polyline(PackedVector2Array([tail[0], tail[1], tail[2], tail[3]]), Color("9cf0e7"), 3.0)
@@ -569,6 +579,8 @@ func _choose(choice: int) -> void:
 	leave_button.disabled = true
 	var answer: Dictionary = current_answers[choice]
 	var fish_action: String = answer["fishAction"]
+	fish_reaction = fish_action
+	fish_reaction_time = 0.55
 	action_counts[fish_action] += 1
 	if fish_action == "bite":
 		heart += 13

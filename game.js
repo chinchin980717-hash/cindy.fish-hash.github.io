@@ -57,6 +57,9 @@ function nextQuestion() {
   state.question = state.deck[state.roundIndex]; state.locked = false;
   const question = state.question;
   state.answers = shuffle(question.answers);
+  const gameFish = $("game-fish");
+  gameFish.classList.remove("react-bite", "react-observe", "react-unhook");
+  gameFish.setAttribute("aria-label", "正在游動的小魚");
   $("round-label").textContent = `第 ${state.roundIndex + 1} / ${state.roundCount} 題`;
   $("round-progress").style.width = `${state.roundIndex / state.roundCount * 100}%`;
   $("event-badge").textContent = `題庫第 ${question.id} 題`;
@@ -75,6 +78,11 @@ function choose(index) {
   state.locked = true;
   const answer = state.answers[index];
   const action = ACTIONS[answer.fishAction];
+  const gameFish = $("game-fish");
+  gameFish.classList.remove("react-bite", "react-observe", "react-unhook");
+  void gameFish.offsetWidth;
+  gameFish.classList.add(`react-${answer.fishAction}`);
+  gameFish.setAttribute("aria-label", `小魚的動作：${action.display}`);
   document.querySelectorAll(".choice").forEach((button, i) => {
     button.disabled = true;
     if (i === index) button.classList.add("selected", action.className);

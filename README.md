@@ -11,6 +11,7 @@
 ## 專案內容
 
 - 版本：`2.8.0`
+- 魚會持續漂游與擺尾；作答後依魚的動作出現短暫反應動畫
 - `index.html`、`styles.css`、`game.js`：GitHub Pages 瀏覽器版
 - `project.godot`、`main.tscn`、`main.gd`：Godot 4 專案
 - `questions.json`：兩個版本共用的 250 題資料，含情境及每題三段文字回覆和對應的魚動作
