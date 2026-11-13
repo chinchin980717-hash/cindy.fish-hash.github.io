@@ -19,6 +19,7 @@ var screen := "title"
 var round_index := 0
 var heart := 42
 var radar := 28
+var boundary := 50
 var chain := 0
 var score := 0
 var selected_round_count := 8
@@ -58,6 +59,8 @@ var chain_value: Label
 var score_value: Label
 var heart_bar: ProgressBar
 var radar_bar: ProgressBar
+var boundary_value: Label
+var boundary_bar: ProgressBar
 var play_tip: Label
 
 var result_layer: Control
@@ -787,6 +790,11 @@ func _build_play() -> void:
 	radar_value = radar_row[1]
 	radar_bar = radar_row[2]
 	status_content.add_child(radar_bar)
+	var boundary_row := _stat_row("界線值", "保留時間，也保留自己", GREEN)
+	status_content.add_child(boundary_row[0])
+	boundary_value = boundary_row[1]
+	boundary_bar = boundary_row[2]
+	status_content.add_child(boundary_bar)
 	status_content.add_child(_spacer(8))
 	var chain_row := _stat_row("魚餌連擊", "連續判斷漂亮就會增加", YELLOW)
 	status_content.add_child(chain_row[0])
@@ -902,6 +910,7 @@ func _start_game() -> void:
 	round_index = 0
 	heart = 42
 	radar = 28
+	boundary = 50
 	chain = 0
 	score = 0
 	ending_key = ""
@@ -945,26 +954,30 @@ func _choose(choice: int) -> void:
 	if choice == 0:
 		heart += 13
 		radar -= 8
+		boundary -= 7
 		score += 70 + chain * 12
 		chain += 1
-		feedback_label.text = "咬下去了！心動 +13，警覺 -8。\n甜甜的餌，通常都會附贈一點點暈船。"
+		feedback_label.text = "咬下去了！心動 +13，警覺 -8，界線 -7。\n%s" % _choice_comment(choice, was_best)
 		feedback_label.add_theme_color_override("font_color", CORAL)
 	elif choice == 1:
 		heart += 4
 		radar += 8
+		boundary += 8
 		score += 105 + (20 if was_best else 0)
 		chain = chain + 1 if was_best else 0
-		feedback_label.text = "你把餌翻過來看了一圈。心動 +4，警覺 +8。\n%s" % ("漂亮，這口沒有白等。" if was_best else "不急著回，也是一種回覆。")
+		feedback_label.text = "你把餌翻過來看了一圈。心動 +4，警覺 +8，界線 +8。\n%s" % _choice_comment(choice, was_best)
 		feedback_label.add_theme_color_override("font_color", YELLOW)
 	else:
 		heart -= 4
 		radar += 14
+		boundary += 12
 		score += 90 + (25 if was_best else 0)
 		chain = chain + 1 if was_best else 0
-		feedback_label.text = "甩尾成功！心動 -4，警覺 +14。\n%s" % ("這個轉身，游得很有尊嚴。" if was_best else "你選擇先把自己放回第一順位。")
+		feedback_label.text = "甩尾成功！心動 -4，警覺 +14，界線 +12。\n%s" % _choice_comment(choice, was_best)
 		feedback_label.add_theme_color_override("font_color", GREEN)
 	heart = clampi(heart, 0, 100)
 	radar = clampi(radar, 0, 100)
+	boundary = clampi(boundary, 0, 100)
 	feedback_label.visible = true
 	next_button.visible = true
 	next_button.grab_focus()
@@ -1008,16 +1021,36 @@ func _finish_game() -> void:
 		ending_key = "free"
 		result_title.text = "自由潛水員 🌊"
 		result_summary.text = "你沒有急著成為誰的特別，也沒有把孤單誤認成愛。\n海很大，慢慢游就好。"
-	result_stats.text = "心動值  %d / 100    ·    警覺值  %d / 100\n本局分數  %d    ·    魚餌連擊  %d    ·    最高分  %d" % [heart, radar, score, chain, best_score]
+	result_stats.text = "心動值  %d / 100    ·    警覺值  %d / 100    ·    界線值  %d / 100\n本局分數  %d    ·    魚餌連擊  %d    ·    最高分  %d\n\n游法報告：%s" % [heart, radar, boundary, score, chain, best_score, _boundary_report()]
 	queue_redraw()
 
 func _update_status() -> void:
 	heart_value.text = "%d / 100" % heart
 	radar_value.text = "%d / 100" % radar
+	boundary_value.text = "%d / 100" % boundary
 	chain_value.text = "%d 次漂亮判斷" % chain
 	score_value.text = "%d" % score
 	heart_bar.value = heart
 	radar_bar.value = radar
+	boundary_bar.value = boundary
+
+func _choice_comment(choice: int, was_best: bool) -> String:
+	if choice == 0:
+		return "甜甜的餌，通常也會附贈一點點暈船。" if not was_best else "這次的心動有根據，但還是記得看後續行動。"
+	if choice == 1:
+		return "漂亮，先讓時間替你驗證。" if was_best else "不急著回，也是一種回覆。"
+	return "這個轉身，游得很有尊嚴。" if was_best else "你選擇先把自己放回第一順位。"
+
+func _boundary_report() -> String:
+	if boundary >= 78 and radar >= 65:
+		return "自由海域型：你能靠近，也能清楚地保留自己的時間與界線。"
+	if boundary >= 68:
+		return "深海觀察型：你願意感受心動，但不急著把訊息當成承諾。"
+	if heart >= 78 and boundary < 42:
+		return "容易暈船型：感受力很強；下一趟游泳，記得替自己留一個出口。"
+	if boundary < 55:
+		return "浪漫冒險型：你很勇敢地靠近，也可以練習在靠近前先問問自己。"
+	return "平衡游法型：你正在找到心動與自我保護之間舒服的距離。"
 
 func _stat_row(caption: String, description: String, accent: Color) -> Array:
 	var row := HBoxContainer.new()
