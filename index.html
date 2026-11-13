@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="我是魚：關係訊息判斷遊戲的瀏覽器預覽版" />
+  <title>我是魚｜關係釣魚模擬器</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <section id="title-screen" class="screen title-screen">
+      <div class="ambient ambient-a"></div>
+      <div class="ambient ambient-b"></div>
+      <div class="title-copy">
+        <p class="eyebrow">RELATIONSHIP FISHING SIMULATOR · 2.7.0</p>
+        <h1>我是魚</h1>
+        <p class="subtitle">一款關於心動、警覺，還有不要亂咬餌的遊戲</p>
+        <p class="intro">你不是獵人。<br />你是那條看見訊息就會靠近的魚。</p>
+        <div class="setup-card">
+          <label for="round-count">本局題數</label>
+          <select id="round-count">
+            <option value="5">5 題｜快速試游</option>
+            <option value="8" selected>8 題｜標準航程</option>
+            <option value="10">10 題｜深海模式</option>
+            <option value="15">15 題｜暈船耐力賽</option>
+          </select>
+          <button id="start-button" class="primary-button">開始釣自己 <span>→</span></button>
+          <button id="how-button" class="ghost-button">玩法說明</button>
+          <p id="title-hint" class="hint">按開始，看看你今天會不會又被一句「在嗎」釣走。</p>
+        </div>
+      </div>
+      <div class="hero-fish" aria-hidden="true"><span class="fish-eye"></span><span class="fish-tail"></span></div>
+    </section>
+
+    <section id="play-screen" class="screen play-screen hidden">
+      <header class="game-header">
+        <strong>我是魚</strong>
+        <span id="round-label">第 1 / 8 則訊息</span>
+        <div class="progress-track"><div id="round-progress" class="progress-fill"></div></div>
+        <button id="quit-button" class="text-button">Esc 離開</button>
+      </header>
+      <div class="play-grid">
+        <article class="message-card">
+          <div id="event-badge" class="badge">🌙 夜半試探型</div>
+          <h2 id="event-title">凌晨的訊息最會放大心動</h2>
+          <p id="event-sender" class="sender">@夜光魷魚 · 關係海域傳來一則訊息</p>
+          <div class="rule"></div>
+          <p id="event-message" class="message">睡了嗎？<br />現在出來見面，海邊風很大。</p>
+          <p id="event-detail" class="detail">白天訊息已讀，晚上突然變成浪漫電影主角。</p>
+          <p class="question">你要怎麼處理這顆餌？</p>
+          <div class="action-row">
+            <button class="choice bite" data-choice="0">1　咬餌</button>
+            <button class="choice observe" data-choice="1">2　先觀察</button>
+            <button class="choice leave" data-choice="2">3　甩尾離場</button>
+          </div>
+          <p id="feedback" class="feedback"></p>
+          <button id="next-button" class="next-button hidden">下一則訊息　→</button>
+        </article>
+
+        <aside class="status-card">
+          <h3>魚況儀表板</h3>
+          <p class="muted">你的心，還在自己的身上嗎？</p>
+          <div class="stat"><div><span>心動值</span><strong id="heart-value">42 / 100</strong></div><div class="bar"><i id="heart-bar" class="bar-heart"></i></div></div>
+          <div class="stat"><div><span>警覺值</span><strong id="radar-value">28 / 100</strong></div><div class="bar"><i id="radar-bar" class="bar-radar"></i></div></div>
+          <div class="stat"><div><span>界線值</span><strong id="boundary-value">50 / 100</strong></div><div class="bar"><i id="boundary-bar" class="bar-boundary"></i></div></div>
+          <div class="mini-stats"><span>魚餌連擊 <b id="chain-value">0</b></span><span>本局分數 <b id="score-value">0</b></span></div>
+          <p class="tip">小提醒：沒有標準答案，只有更適合你的游法。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="result-screen" class="screen result-screen hidden">
+      <div class="result-card">
+        <p class="eyebrow">本局魚生結算</p>
+        <h2 id="result-title">自由海域型</h2>
+        <p id="result-summary" class="result-summary"></p>
+        <div id="result-stats" class="result-stats"></div>
+        <button id="replay-button" class="primary-button">再釣一次　↻</button>
+        <button id="title-button" class="ghost-button">回到海面標題</button>
+        <p class="footer-line">每一次甩尾，都是在把自己游回來。</p>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
