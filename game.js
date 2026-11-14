@@ -5,7 +5,7 @@ const ACTIONS = {
 };
 
 const state = {
-  screen: "title", roundIndex: 0, roundCount: 8, deck: [], question: null, answers: [],
+  screen: "cover", roundIndex: 0, roundCount: 8, deck: [], question: null, answers: [],
   locked: false, heart: 42, radar: 28, boundary: 50, chain: 0, score: 0,
   actionCounts: { bite: 0, observe: 0, unhook: 0 },
   bestScore: Number(localStorage.getItem("fish-best-score") || 0)
@@ -14,7 +14,7 @@ const $ = (id) => document.getElementById(id);
 let questions = [];
 
 function showScreen(name) {
-  ["title", "play", "result"].forEach((screen) => $(screen + "-screen").classList.toggle("hidden", screen !== name));
+  ["cover", "title", "play", "result"].forEach((screen) => $(screen + "-screen").classList.toggle("hidden", screen !== name));
   state.screen = name;
 }
 function clamp(value) { return Math.max(0, Math.min(100, value)); }
@@ -125,6 +125,7 @@ function finishGame() {
   $("result-stats").innerHTML = `本局分數 ${state.score}　·　最高分 ${state.bestScore}<br><br><strong>魚的動作統計：</strong>咬餌 ${counts.bite} 次　·　觀察 ${counts.observe} 次　·　脫鉤 ${counts.unhook} 次<br><br><strong>游法報告：</strong>${report()}`;
 }
 
+$("cover-play-button").addEventListener("click", startGame);
 $("start-button").addEventListener("click", startGame);
 $("replay-button").addEventListener("click", startGame);
 $("title-button").addEventListener("click", () => showScreen("title"));
@@ -134,7 +135,7 @@ $("how-button").addEventListener("click", () => {
   $("title-hint").textContent = "先選一句你會傳出去的文字回覆；之後系統才揭曉魚是咬餌、觀察，還是脫鉤。沒有唯一標準答案。";
 });
 document.addEventListener("keydown", (event) => {
-  if (state.screen === "title" && ["Enter", " "].includes(event.key)) startGame();
+  if (["cover", "title"].includes(state.screen) && ["Enter", " "].includes(event.key)) startGame();
   else if (state.screen === "play" && !state.locked && ["1", "2", "3"].includes(event.key)) choose(Number(event.key) - 1);
   else if (state.screen === "play" && state.locked && ["Enter", " "].includes(event.key)) { state.roundIndex += 1; nextQuestion(); }
   else if (event.key === "Escape") showScreen("title");
@@ -147,13 +148,19 @@ fetch("questions.json")
     if (questions.length !== 250) throw new Error(`預期 250 題，實際載入 ${questions.length} 題`);
     $("round-count").innerHTML = `<option value="5">5 題｜快速試游</option><option value="8" selected>8 題｜標準航程</option><option value="10">10 題｜深海模式</option><option value="15">15 題｜暈船耐力賽</option><option value="30">30 題｜長程巡游</option><option value="60">60 題｜遠洋航程</option><option value="100">100 題｜半數題庫</option><option value="250">250 題｜完整題庫・最終章</option>`;
     $("start-button").disabled = false;
+    $("cover-play-button").disabled = false;
+    $("cover-bank-status").textContent = "250 題已準備好 · 點擊 play 開始";
     $("bank-status").textContent = "250 題完整題庫已載入";
   })
   .catch((error) => {
     $("bank-status").textContent = `題庫載入失敗：${error.message}。請以網站或本機伺服器開啟。`;
     $("start-button").disabled = true;
+    $("cover-play-button").disabled = true;
+    $("cover-bank-status").textContent = `題庫載入失敗：${error.message}`;
     console.error("Question bank failed to load", error);
   });
 $("start-button").disabled = true;
+$("cover-play-button").disabled = true;
 $("bank-status").textContent = "正在載入 250 題題庫…";
+showScreen("cover");
 updateStatus();
