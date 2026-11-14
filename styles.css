@@ -128,12 +128,8 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 .fish-tail { position: absolute; z-index: 1; right: 23px; bottom: 7px; width: 52px; height: 30px; background: #2786a2; clip-path: polygon(0 0,100% 32%,65% 55%,100% 100%,0 78%); transform-origin: 0 50%; animation: tail-wag .48s ease-in-out infinite alternate-reverse; }
 @keyframes hero-bob { 0%,100% { translate: 0 0; rotate: -2deg; } 50% { translate: 0 -10px; rotate: 1deg; } }
 .game-fish { width: 128px; height: 78px; border: 3px solid rgba(229,255,249,.82); border-radius: 54% 46% 48% 52%; background: radial-gradient(ellipse at 28% 28%,#b7fff0 0%,#71e5db 38%,#269cb4 100%); box-shadow: 0 10px 20px rgba(0,0,0,.2),0 0 38px rgba(109,229,232,.3),inset 0 -8px 0 rgba(12,93,121,.18); }
-.game-fish-eye { left: 19px; top: 16px; width: 23px; height: 23px; border: 2px solid #fffdf3; box-shadow: inset 6px 0 0 #12334f,0 1px 4px rgba(0,0,0,.22); }
-.game-fish-belly { position: absolute; left: 48px; bottom: 7px; width: 43px; height: 22px; border-radius: 50%; background: rgba(255,248,232,.38); transform: rotate(-8deg); }
-.game-fish-cheek { position: absolute; left: 14px; top: 43px; width: 18px; height: 9px; border-radius: 50%; background: rgba(255,121,151,.82); box-shadow: 0 0 8px rgba(255,121,151,.34); }
-.game-fish-mouth { position: absolute; left: 3px; top: 39px; width: 12px; height: 10px; border-bottom: 3px solid #17445a; border-radius: 0 0 70% 70%; transform: rotate(-10deg); }
-.game-fish-tail { right: -39px; top: 13px; width: 48px; height: 47px; background: linear-gradient(135deg,#49bac1,#247b9c); filter: drop-shadow(0 2px 2px rgba(0,0,0,.16)); }
-.game-fish-fin { left: 50px; bottom: -13px; width: 31px; height: 27px; background: #258da5; }
+.game-fish { width: 140px; height: 110px; border: 0; border-radius: 0; background: url("assets/cover-fish.png") center / contain no-repeat; box-shadow: none; }
+.game-fish-eye, .game-fish-belly, .game-fish-cheek, .game-fish-mouth, .game-fish-tail, .game-fish-fin { display: none; }
 .game-fish-bubble { position: absolute; left: -18px; top: -16px; width: 9px; height: 9px; border: 2px solid rgba(168,247,244,.8); border-radius: 50%; animation: bubble-rise 1.8s ease-in-out infinite; box-shadow: 17px -12px 0 -2px rgba(168,247,244,.65); }
 @keyframes bubble-rise { 0%,100% { transform: translateY(4px); opacity: .45; } 50% { transform: translateY(-8px); opacity: 1; } }
 .result-meters { display: grid; gap: 14px; margin: 22px 0; padding: 18px 20px; border: 1px solid rgba(109,229,232,.24); border-radius: 18px; background: rgba(3,20,38,.46); text-align: left; }
@@ -153,7 +149,7 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 .cover-screen::before { content: ""; position: absolute; inset: -24px; background: url("assets/cover-play.png") center / cover no-repeat; filter: blur(20px); opacity: .58; transform: scale(1.04); }
 .cover-art-wrap { position: relative; width: min(100vw, calc(100svh * 0.74707)); height: min(100svh, calc(100vw * 1.33856)); aspect-ratio: 1084 / 1451; }
 .cover-art { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center center; }
-.cover-play-button { position: absolute; z-index: 2; left: 50%; top: 94.2%; width: 28%; height: 7.2%; min-height: 44px; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 999px; background: transparent; color: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cover-play-button { position: absolute; z-index: 2; left: 50%; top: 92.4%; width: 28%; height: 7.2%; min-height: 44px; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 999px; background: transparent; color: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cover-play-button:hover:not(:disabled) { background: rgba(255,255,255,.09); filter: drop-shadow(0 0 10px rgba(255,255,255,.28)); }
 .cover-play-button:active:not(:disabled) { background: rgba(255,255,255,.17); }
 .cover-play-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; background: rgba(255,255,255,.12); }

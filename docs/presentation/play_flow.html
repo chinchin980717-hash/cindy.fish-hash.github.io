@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: #F5F5F7; font-family: 'Noto Sans TC', sans-serif; color: #1D1D1F; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      background: #F5F5F7;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .motif {
+      position: absolute;
+      left: 48px;
+      top: 28px;
+      width: 8px;
+      height: 24px;
+      background: #FF6B35;
+      border-radius: 4px;
+    }
+
+    .header { margin-bottom: 20px; }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1D1D1F;
+      line-height: 1;
+    }
+
+    .main-grid {
+      display: flex;
+      flex: 1;
+      align-items: flex-start;
+      gap: 44px;
+    }
+
+    /* Preview (left) */
+    .preview-left {
+      width: 460px;
+      height: 560px;
+      background: #FFFFFF;
+      border: 1px solid #D2D2D7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 12px;
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    /* Simulated cover art with centered Play badge (self-contained; no external images) */
+    .cover-art {
+      width: 420px;
+      height: 520px;
+      border-radius: 12px;
+      background:
+        radial-gradient(600px 200px at 10% 20%, rgba(255,107,53,0.06), transparent 8%),
+        radial-gradient(300px 120px at 90% 80%, rgba(0,122,255,0.04), transparent 8%),
+        linear-gradient(180deg, #FFFDF8 0%, #E9F9FF 48%, #FFFFFF 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 6px 18px rgba(15,15,15,0.04);
+    }
+
+    .cover-art .play-circle {
+      width: 108px;
+      height: 108px;
+      border-radius: 999px;
+      background: #FF6B35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(255,107,53,0.14);
+      flex-shrink: 0;
+    }
+    .cover-art .play-circle::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 34px solid #fff;
+      border-top: 22px solid transparent;
+      border-bottom: 22px solid transparent;
+      margin-left: 6px;
+    }
+
+    .cover-caption {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      right: 18px;
+      font-size: 13px;
+      color: rgba(29,29,31,0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cover-caption .label { font-weight: 700; color: #1D1D1F; }
+    .cover-caption .meta { font-size: 12px; opacity: 0.8; }
+
+    /* Right content */
+    .content-right { flex: 1; padding-top: 6px; }
+    .badge { display: inline-block; padding: 6px 14px; background: #FF6B35; color: #FFFFFF; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 16px; }
+    .desc-item { margin-bottom: 20px; }
+    .desc-item h3 { font-size: 20px; font-weight: 700; color: #CE3700; margin-bottom: 8px; }
+    .desc-item p { font-size: 17px; color: #1D1D1F; line-height: 1.55; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Sans Mono", monospace;
+      font-size: 15px;
+      background: #F2F2F4;
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #1D1D1F;
+    }
+
+    /* Make sure long text wraps and layout stays within bounds */
+    .content-right { overflow: hidden; }
+    .desc-item p { word-break: break-word; }
+
+    /* Responsive-like safe-guards within fixed slide */
+    @media (max-height: 720px) {
+      .slide-container { height: 720px; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide-container" role="document" aria-label="幻燈片：點一下 Play，直接開始標準航程">
+    <div class="motif" aria-hidden="true"></div>
+
+    <div class="header">
+      <h2 class="title">點一下 Play，直接開始標準航程</h2>
+    </div>
+
+    <div class="main-grid">
+      <div class="preview-left" role="img" aria-label="封面 Play 按鈕示意">
+        <div class="cover-art" aria-hidden="true">
+          <div class="play-circle" aria-hidden="true"></div>
+          <div class="cover-caption">
+            <div class="label">互動封面示意</div>
+            <div class="meta">250 題後啟用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-right">
+        <div class="badge">快速入口優化</div>
+
+        <div class="desc-item">
+          <h3>互動式封面</h3>
+          <p>海報上的「play」文字現已疊加透明點擊區，與泡泡框視覺完美對齊。當 250 題題庫載入完成後會自動啟用（Enabled）。</p>
+        </div>
+
+        <div class="desc-item">
+          <h3>簡化啟動路徑</h3>
+          <p>點擊 Play 略過繁瑣設定，直接以「8 題｜標準航程」進入遊戲。讓玩家能在首屏一鍵「入水」。</p>
+        </div>
+
+        <div class="desc-item">
+          <h3>技術一致性</h3>
+          <p>沿用現有 <code>startGame()</code> 邏輯，並透過 ARIA Label 提供無障礙存取支援，確保各種設備上的點擊體驗一致。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html,body { height: 100%; }
+    body { background: #F5F5F7; display:flex; align-items:center; justify-content:center; font-family: 'Noto Sans TC', sans-serif; color: #1D1D1F; }
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      background: #F5F5F7;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .motif {
+      position: absolute;
+      left: 28px;
+      top: 28px;
+      width: 6px;
+      height: 18px;
+      background: #FF6B35;
+      border-radius: 4px;
+    }
+    .header { margin-bottom: 22px; display:flex; align-items:center; gap:12px; }
+    .title { font-size: 28px; font-weight: 700; color: #1D1D1F; line-height:1; }
+    .main-grid { display: flex; flex: 1; gap: 28px; align-items: stretch; }
+    .content-left { width: 740px; padding-right: 28px; display: flex; flex-direction: column; justify-content: center; }
+    .desc-item { margin-bottom: 18px; }
+    .desc-item h3 { font-size: 20px; font-weight: 700; color: #CE3700; margin-bottom: 8px; }
+    .desc-item p { font-size: 18px; color: #1D1D1F; line-height: 1.5; }
+    .right-column { width: 360px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; }
+    .preview-right { width: 340px; height: 460px; background: #FFFFFF; border: 1px solid #D2D2D7; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 6px; box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset; }
+    .preview-img { width: 100%; height: 100%; object-fit: contain; display:block; }
+    .caption { font-size: 13px; color: #6E6E73; margin-top: 10px; text-align: center; }
+    @media print { .slide-container { box-shadow: none; } }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="motif" aria-hidden="true"></div>
+    <div class="header">
+      <h2 class="title">直向手機：完整海報，滿版氛圍</h2>
+    </div>
+    <div class="main-grid">
+      <div class="content-left">
+        <div class="desc-item">
+          <h3>原比例視覺保留</h3>
+          <p>遊戲封面長方比例（1084x1451）完整呈現，不進行任何主視覺裁切，確保標題「我是魚」與小魚互動情境完美落地。</p>
+        </div>
+        <div class="desc-item">
+          <h3>模糊背景延展（Blur Fill）</h3>
+          <p>針對較窄的手機螢幕，上下區域以封面圖案進行 20px 柔焦延展處理，消除冷硬留白，大幅提升沉浸感。</p>
+        </div>
+        <div class="desc-item">
+          <h3>UI 適配安全性</h3>
+          <p>頂部狀態標籤自動避開安全區域（env），確保載入狀態在所有設備上皆清晰可讀。</p>
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="preview-right">
+          <img class="preview-img" src="/home/ubuntu/manus-slides/deck-mwfo06w1-9467178f/assets/fish-cover-preview-final.png" alt="手機版畫面預覽">
+        </div>
+        <p class="caption">iPhone 尺寸實際渲染結果</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

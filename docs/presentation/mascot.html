@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .slide-container { width: 1280px; min-height: 720px; background: #F5F5F7; display: flex; flex-direction: column; font-family: 'Noto Sans TC', sans-serif; color: #1D1D1F; padding: 40px 60px; position: relative; }
+    .motif { position: absolute; left: 40px; top: 40px; width: 8px; height: 24px; background: #FF6B35; border-radius: 4px; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .title { font-size: 32px; font-weight: 700; }
+    .pair-grid { display: flex; justify-content: center; align-items: flex-start; gap: 80px; flex: 1; }
+    .fish-card { width: 400px; display: flex; flex-direction: column; align-items: center; }
+    .fish-box { width: 400px; height: 300px; background: #FFFFFF; border: 1px solid #D2D2D7; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; border-radius: 8px; }
+    .fish-img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    .fish-label { font-size: 20px; font-weight: 700; color: #1D1D1F; margin-bottom: 12px; }
+    .fish-desc { font-size: 16px; color: #6E6E73; text-align: center; line-height: 1.6; }
+    .accent { color: #CE3700; }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="motif"></div>
+    <div class="header">
+      <h2 class="title">封面橘魚，也游進遊戲裡</h2>
+    </div>
+    <div class="pair-grid">
+      <div class="fish-card">
+        <div class="fish-box" style="background: linear-gradient(135deg, #e3f9f6 0%, #b8e9e4 100%);">
+           <div style="width: 128px; height: 78px; border-radius: 54% 46%; background: radial-gradient(circle at 30% 30%, #b7fff0, #269cb4);"></div>
+        </div>
+        <div class="fish-label">舊版：薄荷綠小魚</div>
+        <p class="fish-desc">採用純 CSS 渲染，色調偏冷，與封面的暖色風格存有斷層。</p>
+      </div>
+      <div class="fish-card">
+        <div class="fish-box">
+          <img class="fish-img" src="/home/ubuntu/fish-repo/assets/cover-fish.png" alt="新版橘色小魚">
+        </div>
+        <div class="fish-label accent">新版：封面橘魚（Mascot）</div>
+        <p class="fish-desc">直接從封面提取吉祥物資產，建立<span class="accent">視覺連貫性</span>。保留遊戲內的游動動畫與反應動畫，角色更有生命力。</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
