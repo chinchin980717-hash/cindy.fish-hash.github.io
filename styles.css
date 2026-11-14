@@ -150,6 +150,7 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 
 /* Cover-first entry: the printed “play” is the live, accessible start button. */
 .cover-screen { position: relative; display: grid; place-items: center; min-height: 100svh; height: 100svh; padding: 0; overflow: hidden; background: radial-gradient(ellipse at center, #25bdd0 0%, #078cba 65%, #075582 100%); }
+.cover-screen::before { content: ""; position: absolute; inset: -24px; background: url("assets/cover-play.png") center / cover no-repeat; filter: blur(20px); opacity: .58; transform: scale(1.04); }
 .cover-art-wrap { position: relative; width: min(100vw, calc(100svh * 0.74707)); height: min(100svh, calc(100vw * 1.33856)); aspect-ratio: 1084 / 1451; }
 .cover-art { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center center; }
 .cover-play-button { position: absolute; z-index: 2; left: 50%; top: 94.2%; width: 28%; height: 7.2%; min-height: 44px; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 999px; background: transparent; color: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -158,8 +159,4 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 .cover-play-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; background: rgba(255,255,255,.12); }
 .cover-play-button:disabled { cursor: wait; }
 .cover-bank-status { position: absolute; z-index: 3; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 24px); margin: 0; padding: 7px 12px; border: 1px solid rgba(255,255,255,.32); border-radius: 99px; background: rgba(6,35,68,.64); color: #fff8e8; font-size: 12px; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,.45); white-space: nowrap; }
-@media (max-aspect-ratio: 3 / 4) and (orientation: portrait) {
-  .cover-art-wrap { width: 100vw; height: 100svh; aspect-ratio: auto; }
-  .cover-art { object-fit: cover; }
-}
 @media (prefers-reduced-motion: reduce) { .cover-play-button { transition: none; } }
