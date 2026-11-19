@@ -16,7 +16,29 @@
         <button id="cover-play-button" class="cover-play-button" type="button" aria-label="Play，開始遊戲" title="Play — 開始遊戲" disabled></button>
       </div>
       <p id="cover-bank-status" class="cover-bank-status" role="status">正在載入題庫…</p>
+      <button id="cover-stats-button" class="cover-stats-button" type="button" aria-label="查看我的魚況統計與個人排行榜">我的魚榜</button>
     </section>
+    <dialog id="stats-dialog" class="stats-dialog" aria-labelledby="stats-title">
+      <div class="stats-panel">
+        <button id="close-stats-button" class="stats-close" type="button" aria-label="關閉統計面板">×</button>
+        <p class="eyebrow">LOCAL FISH LOG</p>
+        <h2 id="stats-title">我的魚況小檔案</h2>
+        <p class="stats-note">只統計這個瀏覽器的遊玩紀錄，不是跨玩家排行。</p>
+        <div class="stats-summary" aria-label="累積遊戲統計">
+          <div><span>完成局數</span><strong id="stats-games">0</strong></div>
+          <div><span>最佳分數</span><strong id="stats-best">0</strong></div>
+          <div><span>平均分數</span><strong id="stats-average">0</strong></div>
+        </div>
+        <div class="stats-actions" aria-label="魚的動作統計">
+          <span>咬餌 <b id="stats-bite">0</b></span>
+          <span>觀察 <b id="stats-observe">0</b></span>
+          <span>脫鉤 <b id="stats-unhook">0</b></span>
+        </div>
+        <h3>個人前五名</h3>
+        <ol id="stats-leaderboard" class="stats-leaderboard"></ol>
+        <button id="stats-play-button" class="primary-button" type="button">開始遊戲　→</button>
+      </div>
+    </dialog>
     <section id="title-screen" class="screen title-screen hidden">
       <div class="ambient ambient-a"></div>
       <div class="ambient ambient-b"></div>

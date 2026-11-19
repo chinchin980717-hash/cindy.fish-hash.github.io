@@ -12,6 +12,45 @@ const state = {
 };
 const $ = (id) => document.getElementById(id);
 let questions = [];
+const HISTORY_KEY = "fish-game-history";
+function getHistory() {
+  try {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    return Array.isArray(history) ? history.filter((item) => item && Number.isFinite(Number(item.score))) : [];
+  } catch { return []; }
+}
+function updateStatsWidget() {
+  const history = getHistory();
+  const totalScore = history.reduce((sum, item) => sum + Number(item.score), 0);
+  const totals = history.reduce((sum, item) => {
+    ["bite", "observe", "unhook"].forEach((action) => { sum[action] += Number(item.actions?.[action] || 0); });
+    return sum;
+  }, { bite: 0, observe: 0, unhook: 0 });
+  $("stats-games").textContent = history.length;
+  $("stats-best").textContent = Math.max(state.bestScore, ...history.map((item) => Number(item.score))).toLocaleString("zh-TW");
+  $("stats-average").textContent = history.length ? Math.round(totalScore / history.length).toLocaleString("zh-TW") : "0";
+  $("stats-bite").textContent = totals.bite;
+  $("stats-observe").textContent = totals.observe;
+  $("stats-unhook").textContent = totals.unhook;
+  const leaderboard = $("stats-leaderboard");
+  leaderboard.replaceChildren();
+  const topScores = [...history].sort((a, b) => Number(b.score) - Number(a.score)).slice(0, 5);
+  if (!topScores.length) {
+    const empty = document.createElement("li");
+    empty.className = "stats-empty";
+    empty.textContent = "完成第一局後，最高分就會登上榜單。";
+    leaderboard.append(empty);
+    return;
+  }
+  topScores.forEach((item) => {
+    const row = document.createElement("li");
+    const date = new Date(item.date);
+    const dateLabel = Number.isNaN(date.getTime()) ? "遊玩紀錄" : new Intl.DateTimeFormat("zh-TW", { month: "numeric", day: "numeric" }).format(date);
+    const label = document.createElement("span"); label.textContent = `${dateLabel} · ${item.rounds || 8} 題`;
+    const score = document.createElement("strong"); score.textContent = Number(item.score).toLocaleString("zh-TW");
+    row.append(label, score); leaderboard.append(row);
+  });
+}
 
 function showScreen(name) {
   ["cover", "title", "play", "result"].forEach((screen) => $(screen + "-screen").classList.toggle("hidden", screen !== name));
@@ -110,6 +149,9 @@ function report() {
 }
 function finishGame() {
   showScreen("result");
+  const history = getHistory();
+  history.push({ score: state.score, rounds: state.roundCount, date: new Date().toISOString(), actions: { ...state.actionCounts } });
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-100))); } catch (error) { console.warn("Game history could not be saved", error); }
   if (state.score > state.bestScore) { state.bestScore = state.score; localStorage.setItem("fish-best-score", state.bestScore); }
   let title = "自由潛水員 🌊", summary = "你沒有急著成為誰的特別，也沒有把孤單誤認成愛。\n海很大，慢慢游就好。";
   if (state.boundary >= 78 && state.radar >= 65) { title = "成功脫鉤 🐟"; summary = "你把魚鉤還給了海，也把自己的時間拿了回來。\n今天沒有上鉤，明天也不用急著上。"; }
@@ -123,6 +165,7 @@ function finishGame() {
   });
   const counts = state.actionCounts;
   $("result-stats").innerHTML = `本局分數 ${state.score}　·　最高分 ${state.bestScore}<br><br><strong>魚的動作統計：</strong>咬餌 ${counts.bite} 次　·　觀察 ${counts.observe} 次　·　脫鉤 ${counts.unhook} 次<br><br><strong>游法報告：</strong>${report()}`;
+  updateStatsWidget();
 }
 
 $("cover-play-button").addEventListener("click", startGame);
@@ -134,6 +177,10 @@ $("next-button").addEventListener("click", () => { state.roundIndex += 1; nextQu
 $("how-button").addEventListener("click", () => {
   $("title-hint").textContent = "先選一句你會傳出去的文字回覆；之後系統才揭曉魚是咬餌、觀察，還是脫鉤。沒有唯一標準答案。";
 });
+$("cover-stats-button").addEventListener("click", () => { updateStatsWidget(); $("stats-dialog").showModal(); });
+$("close-stats-button").addEventListener("click", () => $("stats-dialog").close());
+$("stats-play-button").addEventListener("click", () => { $("stats-dialog").close(); showScreen("title"); });
+$("stats-dialog").addEventListener("click", (event) => { if (event.target === $("stats-dialog")) $("stats-dialog").close(); });
 document.addEventListener("keydown", (event) => {
   if (["cover", "title"].includes(state.screen) && ["Enter", " "].includes(event.key)) startGame();
   else if (state.screen === "play" && !state.locked && ["1", "2", "3"].includes(event.key)) choose(Number(event.key) - 1);
@@ -164,3 +211,4 @@ $("cover-play-button").disabled = true;
 $("bank-status").textContent = "正在載入 250 題題庫…";
 showScreen("cover");
 updateStatus();
+updateStatsWidget();
