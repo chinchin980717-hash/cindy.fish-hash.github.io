@@ -24,6 +24,14 @@
         <p class="eyebrow">LOCAL FISH LOG</p>
         <h2 id="stats-title">我的魚況小檔案</h2>
         <p class="stats-note">只統計這個瀏覽器的遊玩紀錄，不是跨玩家排行。</p>
+        <form id="nickname-form" class="nickname-form">
+          <label for="player-nickname">玩家暱稱</label>
+          <div class="nickname-entry">
+            <input id="player-nickname" name="nickname" type="text" maxlength="16" autocomplete="nickname" placeholder="輸入暱稱（最多 16 字）" />
+            <button type="submit">儲存</button>
+          </div>
+          <p id="nickname-status" class="nickname-status" role="status" aria-live="polite"></p>
+        </form>
         <div class="stats-summary" aria-label="累積遊戲統計">
           <div><span>完成局數</span><strong id="stats-games">0</strong></div>
           <div><span>最佳分數</span><strong id="stats-best">0</strong></div>
@@ -38,6 +46,20 @@
         <ol id="stats-leaderboard" class="stats-leaderboard"></ol>
         <button id="stats-play-button" class="primary-button" type="button">開始遊戲　→</button>
       </div>
+    </dialog>
+    <dialog id="player-dialog" class="stats-dialog player-dialog" aria-labelledby="player-dialog-title">
+      <form id="player-start-form" class="stats-panel player-start-panel">
+        <p class="eyebrow">BEFORE YOU DIVE IN</p>
+        <h2 id="player-dialog-title">先報上你的暱稱</h2>
+        <p class="stats-note">暱稱會顯示在這個瀏覽器的個人排行榜。</p>
+        <label for="start-player-nickname">玩家暱稱</label>
+        <input id="start-player-nickname" name="nickname" type="text" maxlength="16" autocomplete="nickname" placeholder="輸入暱稱（最多 16 字）" required />
+        <p id="player-name-error" class="nickname-status" role="status" aria-live="polite"></p>
+        <div class="player-start-actions">
+          <button id="cancel-player-start" class="ghost-button" type="button">先等等</button>
+          <button class="primary-button" type="submit">開始遊戲　→</button>
+        </div>
+      </form>
     </dialog>
     <section id="title-screen" class="screen title-screen hidden">
       <div class="ambient ambient-a"></div>

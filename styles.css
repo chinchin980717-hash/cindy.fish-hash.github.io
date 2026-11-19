@@ -165,6 +165,22 @@ select { width: 100%; border: 1px solid rgba(109,229,232,.42); background: #0824
 .stats-panel .eyebrow { margin: 0 48px 8px 0; }
 .stats-panel h2 { margin: 0 46px 6px 0; font-size: clamp(24px, 6vw, 32px); }
 .stats-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.nickname-form { margin-top: 16px; }
+.nickname-form label { display: block; margin-bottom: 7px; color: var(--yellow); font-size: 13px; font-weight: 750; }
+.nickname-entry { display: flex; gap: 8px; }
+.nickname-entry input { flex: 1; min-width: 0; border: 1px solid rgba(109,229,232,.42); border-radius: 11px; padding: 11px 12px; background: #08243d; color: var(--cream); font: inherit; font-size: 14px; }
+.nickname-entry input::placeholder { color: #9bb4c5; }
+.nickname-entry input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.nickname-entry button { min-width: 66px; border: 1px solid rgba(109,229,232,.42); border-radius: 11px; padding: 9px 13px; background: rgba(109,229,232,.16); color: var(--cream); font-weight: 800; }
+.nickname-entry button:hover, .nickname-entry button:focus-visible { background: rgba(109,229,232,.28); outline: 2px solid var(--cyan); outline-offset: 2px; }
+.nickname-status { min-height: 18px; margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.player-start-panel > label { display: block; margin: 20px 0 7px; color: var(--yellow); font-size: 13px; font-weight: 750; }
+.player-start-panel > input { width: 100%; border: 1px solid rgba(109,229,232,.42); border-radius: 11px; padding: 12px; background: #08243d; color: var(--cream); font: inherit; font-size: 16px; }
+.player-start-panel > input::placeholder { color: #9bb4c5; }
+.player-start-panel > input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.player-start-actions { display: flex; gap: 10px; margin-top: 12px; }
+.player-start-actions button { flex: 1; width: auto; margin: 0; }
+.player-start-actions .ghost-button { background: rgba(109,229,232,.1); }
 .stats-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin: 22px 0 14px; }
 .stats-summary > div { min-width: 0; padding: 13px 8px; border: 1px solid rgba(109,229,232,.22); border-radius: 14px; background: rgba(16,61,97,.68); text-align: center; }
 .stats-summary span { display: block; color: var(--muted); font-size: 12px; }

@@ -13,6 +13,10 @@ const state = {
 const $ = (id) => document.getElementById(id);
 let questions = [];
 const HISTORY_KEY = "fish-game-history";
+const PLAYER_NAME_KEY = "fish-player-name";
+function getPlayerName() {
+  return (localStorage.getItem(PLAYER_NAME_KEY) || "").trim() || "匿名魚友";
+}
 function getHistory() {
   try {
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
@@ -46,7 +50,7 @@ function updateStatsWidget() {
     const row = document.createElement("li");
     const date = new Date(item.date);
     const dateLabel = Number.isNaN(date.getTime()) ? "遊玩紀錄" : new Intl.DateTimeFormat("zh-TW", { month: "numeric", day: "numeric" }).format(date);
-    const label = document.createElement("span"); label.textContent = `${dateLabel} · ${item.rounds || 8} 題`;
+    const label = document.createElement("span"); label.textContent = `${item.nickname || "匿名魚友"} · ${dateLabel} · ${item.rounds || 8} 題`;
     const score = document.createElement("strong"); score.textContent = Number(item.score).toLocaleString("zh-TW");
     row.append(label, score); leaderboard.append(row);
   });
@@ -59,6 +63,13 @@ function showScreen(name) {
 function clamp(value) { return Math.max(0, Math.min(100, value)); }
 function shuffle(items) { return [...items].sort(() => Math.random() - 0.5); }
 function updateBar(id, value) { $(id).style.width = `${clamp(value)}%`; }
+function requestPlayerName() {
+  if (!questions.length) return;
+  $("start-player-nickname").value = localStorage.getItem(PLAYER_NAME_KEY) || "";
+  $("player-name-error").textContent = "";
+  $("player-dialog").showModal();
+  $("start-player-nickname").focus();
+}
 function updateStatus() {
   $("heart-value").textContent = `${state.heart} / 100`;
   $("radar-value").textContent = `${state.radar} / 100`;
@@ -150,7 +161,7 @@ function report() {
 function finishGame() {
   showScreen("result");
   const history = getHistory();
-  history.push({ score: state.score, rounds: state.roundCount, date: new Date().toISOString(), actions: { ...state.actionCounts } });
+  history.push({ nickname: getPlayerName(), score: state.score, rounds: state.roundCount, date: new Date().toISOString(), actions: { ...state.actionCounts } });
   try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-100))); } catch (error) { console.warn("Game history could not be saved", error); }
   if (state.score > state.bestScore) { state.bestScore = state.score; localStorage.setItem("fish-best-score", state.bestScore); }
   let title = "自由潛水員 🌊", summary = "你沒有急著成為誰的特別，也沒有把孤單誤認成愛。\n海很大，慢慢游就好。";
@@ -168,21 +179,49 @@ function finishGame() {
   updateStatsWidget();
 }
 
-$("cover-play-button").addEventListener("click", startGame);
-$("start-button").addEventListener("click", startGame);
-$("replay-button").addEventListener("click", startGame);
+$("cover-play-button").addEventListener("click", requestPlayerName);
+$("start-button").addEventListener("click", requestPlayerName);
+$("replay-button").addEventListener("click", requestPlayerName);
 $("title-button").addEventListener("click", () => showScreen("title"));
 $("quit-button").addEventListener("click", () => showScreen("title"));
 $("next-button").addEventListener("click", () => { state.roundIndex += 1; nextQuestion(); });
 $("how-button").addEventListener("click", () => {
   $("title-hint").textContent = "先選一句你會傳出去的文字回覆；之後系統才揭曉魚是咬餌、觀察，還是脫鉤。沒有唯一標準答案。";
 });
-$("cover-stats-button").addEventListener("click", () => { updateStatsWidget(); $("stats-dialog").showModal(); });
+$("cover-stats-button").addEventListener("click", () => {
+  $("player-nickname").value = localStorage.getItem(PLAYER_NAME_KEY) || "";
+  $("nickname-status").textContent = "暱稱會套用到之後的遊玩紀錄。";
+  updateStatsWidget();
+  $("stats-dialog").showModal();
+});
+$("nickname-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const nickname = $("player-nickname").value.trim().slice(0, 16) || "匿名魚友";
+  localStorage.setItem(PLAYER_NAME_KEY, nickname);
+  $("player-nickname").value = nickname;
+  $("nickname-status").textContent = `已儲存暱稱「${nickname}」；新紀錄會顯示這個名字。`;
+  updateStatsWidget();
+});
+$("player-start-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const nickname = $("start-player-nickname").value.trim().slice(0, 16);
+  if (!nickname) {
+    $("player-name-error").textContent = "請先輸入玩家暱稱再開始遊戲。";
+    $("start-player-nickname").focus();
+    return;
+  }
+  localStorage.setItem(PLAYER_NAME_KEY, nickname);
+  $("player-dialog").close();
+  startGame();
+});
 $("close-stats-button").addEventListener("click", () => $("stats-dialog").close());
 $("stats-play-button").addEventListener("click", () => { $("stats-dialog").close(); showScreen("title"); });
 $("stats-dialog").addEventListener("click", (event) => { if (event.target === $("stats-dialog")) $("stats-dialog").close(); });
+$("cancel-player-start").addEventListener("click", () => $("player-dialog").close());
+$("player-dialog").addEventListener("click", (event) => { if (event.target === $("player-dialog")) $("player-dialog").close(); });
 document.addEventListener("keydown", (event) => {
-  if (["cover", "title"].includes(state.screen) && ["Enter", " "].includes(event.key)) startGame();
+  if ($("player-dialog").open) return;
+  if (["cover", "title"].includes(state.screen) && ["Enter", " "].includes(event.key)) { event.preventDefault(); requestPlayerName(); }
   else if (state.screen === "play" && !state.locked && ["1", "2", "3"].includes(event.key)) choose(Number(event.key) - 1);
   else if (state.screen === "play" && state.locked && ["Enter", " "].includes(event.key)) { state.roundIndex += 1; nextQuestion(); }
   else if (event.key === "Escape") showScreen("title");
